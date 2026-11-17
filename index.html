@@ -821,7 +821,7 @@ $k('kReset').onclick=()=>{KB=Object.assign({},DFL);listen=null;save();draw()};
 </script><script>
 // ===== 클라우드 저장 (Supabase RPC) =====
 (()=>{
-const SB_URL='',SB_KEY='';   // ← Supabase 프로젝트 URL / anon public key 를 여기에 입력
+const SB_URL='https://lclmjagldxfpknepyayh.supabase.co/rest/v1/',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxjbG1qYWdsZHhmcGtuZXB5YXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ5NDg2ODcsImV4cCI6MjExMDUyNDY4N30.6Ammxk-Y1XUxsbtQ9byMq_vw8SQQY4T6ha0FJqPDsUI';   // ← Supabase 프로젝트 URL / anon public key 를 여기에 입력
 const KEYS=['pda_prog_v2','pda_prog','pda_name','pda_prefs','pda_keys','pda5','pda_vol'],$c=id=>document.getElementById(id);
 const ok=()=>!!(SB_URL&&SB_KEY);
 const rpc=(fn,body)=>fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()}).then(t=>t?JSON.parse(t):null);
