@@ -433,7 +433,7 @@ function hudDraw(){const[p,e]=G.teams;cx.fillStyle='rgba(8,10,16,.72)';cx.fillRe
  G.teams.forEach((t,ti)=>{const x0=ti?VW-156:4;t.chars.forEach((c,i)=>{const x=x0+i*76,on=t.a===i,hw=Math.round(70*c.hp/c.max);txt((on?'▶':'')+(ti===0?(PNAME||'플레이어'):c.cn),x,11,c.ko?'#777':on?'#fff':'#98a1b3');bar(x,14,70,4,c.hp,c.max,c.ko?'#555':ti?'#ef5350':'#66bb6a');cx.fillStyle='rgba(255,245,157,.65)';cx.fillRect(x+hw,14,Math.min(70-hw,Math.round(70*c.pool/c.max)),4);bar(x,19,70,2,c.gauge,GMAX,c.gauge>=GMAX?'#ffd54f':'#7e57c2')})});
  txt((G.mode==='story'?'CH '+CH.id+'  '+Math.min(G.wave,CH.w.length)+'/'+CH.w.length:G.mode==='pvp'?'PVP':'WAVE '+G.wave),VW/2,11,'#ffd54f','center');if(G.nw>0)txt('클리어! 다음 적 접근 중…',VW/2,24,'#fff','center',7);
  for(let i=0;i<3;i++){const x=VW/2-27+i*20,f=Math.max(0,Math.min(1,p.gs-i));cx.fillStyle='#171c28';cx.fillRect(x,VH-14,16,9);cx.fillStyle=f>=1?'#ffd54f':'#7e6a2a';cx.fillRect(x,VH-14,Math.round(16*f),9);cx.strokeStyle='#000';cx.strokeRect(x+.5,VH-13.5,15,8)}if(p.gm>0)txt('붙잡기 '+(p.gm/60).toFixed(1)+'s',VW/2,VH-20,'#ffd54f','center',7);
- txt('좌클릭 공격 · 우클릭 누른 채 조준→놓아 후크 · '+kname('parry')+' 패링 · '+kname('dash')+' 대쉬',VW/2,VH-33,'#9bb0ff','center',7)}
+ txt(kname('attackM')+' 공격 · '+kname('hook')+' 누른 채 조준→놓아 후크 · '+kname('parry')+' 패링 · '+kname('dash')+' 대쉬',VW/2,VH-33,'#9bb0ff','center',7)}
 function render(){pBtn.style.display=(G&&!G.over)?'flex':'none';cx.clearRect(0,0,VW,VH);const p=G?G.teams[0]:null;
  if(!G){camX+=.4;if(camX>FL.width-VW)camX=0;camY=144}
  else{const cf=G.cine?{x:G.cine.b?G.cine.b.x:p.x,y:GY-14}:p;camX+=(Math.max(0,Math.min(FL.width-VW,cf.x*Z-VW/2))-camX)*.12;camY+=(Math.max(0,Math.min(FL.height-VH,cf.y*Z-VH/2))-camY)*.1}
@@ -498,7 +498,7 @@ document.getElementById('bF').textContent='⚔';document.getElementById('bF').st
  const ed=e=>{aUp(e.pointerId);ak.style.transform=''};az.addEventListener('pointerup',ed);az.addEventListener('pointercancel',ed)}
 document.getElementById('b1').addEventListener('pointerdown',e=>{e.preventDefault();useGrab()});
 let MB=0;function mAng(x,y){const r=cv.getBoundingClientRect(),p=G.teams[0],k=r.width/VW;return Math.atan2(y-(r.top+T(p.y)*k),x-(r.left+S(p.x)*k))}
-let galHoldTimer=0,galHoldFired=false;const cancelGalHold=()=>{if(galHoldTimer){clearTimeout(galHoldTimer);galHoldTimer=0}};cv.addEventListener('pointerdown',e=>{if(GV){if(e.pointerType==='touch'||e.pointerType==='pen'){galHoldFired=false;cancelGalHold();galHoldTimer=setTimeout(()=>{if(!GV)return;galHoldFired=true;GV=null;hideBubble();document.getElementById('menu').style.display='flex';showPanel('galleryPanel')},750)}else galNext();return}if(G&&G.scene){sceneNext();return}if(G&&G.over)toMenu();else if(e.pointerType==='mouse'){MB=e.button;aSt('m',e.clientX,e.clientY);if(MB===2&&atk.on&&atk.id==='m'){atk.drag=1;atk.ang=mAng(e.clientX,e.clientY)}}});cv.addEventListener('pointerup',e=>{if(GV&&(e.pointerType==='touch'||e.pointerType==='pen')){cancelGalHold();if(!galHoldFired)galNext();return}if(e.pointerType==='mouse'&&e.button===MB)aUp('m')});cv.addEventListener('pointercancel',cancelGalHold);addEventListener('pointermove',e=>{if(e.pointerType==='mouse'&&atk.on&&atk.id==='m'&&MB===2){atk.drag=1;atk.ang=mAng(e.clientX,e.clientY)}});addEventListener('pointerup',e=>{if(e.pointerType==='mouse'&&e.button===MB)aUp('m')});
+let galHoldTimer=0,galHoldFired=false;const cancelGalHold=()=>{if(galHoldTimer){clearTimeout(galHoldTimer);galHoldTimer=0}};cv.addEventListener('pointerdown',e=>{if(GV){if(e.pointerType==='touch'||e.pointerType==='pen'){galHoldFired=false;cancelGalHold();galHoldTimer=setTimeout(()=>{if(!GV)return;galHoldFired=true;GV=null;hideBubble();document.getElementById('menu').style.display='flex';showPanel('galleryPanel')},750)}else galNext();return}if(G&&G.scene){sceneNext();return}if(G&&G.over)toMenu();else if(e.pointerType==='mouse'&&(e.button===mbtn('attackM')||e.button===mbtn('hook'))){MB=e.button;aSt('m',e.clientX,e.clientY);if(MB===mbtn('hook')&&atk.on&&atk.id==='m'){atk.drag=1;atk.ang=mAng(e.clientX,e.clientY)}}});cv.addEventListener('pointerup',e=>{if(GV&&(e.pointerType==='touch'||e.pointerType==='pen')){cancelGalHold();if(!galHoldFired)galNext();return}if(e.pointerType==='mouse'&&e.button===MB)aUp('m')});cv.addEventListener('pointercancel',cancelGalHold);addEventListener('pointermove',e=>{if(e.pointerType==='mouse'&&atk.on&&atk.id==='m'&&MB===mbtn('hook')){atk.drag=1;atk.ang=mAng(e.clientX,e.clientY)}});addEventListener('pointerup',e=>{if(e.pointerType==='mouse'&&e.button===MB)aUp('m')});
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('keydown',e=>{const k=e.key.toLowerCase();keys[k]=1;if(k===' '||((k==='w'||k==='arrowup')&&!(G&&G.teams[0].cl))){JH=true;if(!e.repeat)jump()}if(GV&&(k==='enter'||k===' '||k==='f'||k==='x'||k==='escape')){galNext(k==='x'||k==='escape');return}if(!G)return;if(G.scene&&(k==='enter'||k===' '||k==='f'||k==='x'))sceneNext(k==='x');if(k==='r'&&G.over)toMenu();if(k==='escape'){PO?closePause():openPause()}if(k==='f'){}if(k==='q')parry();if(k==='shift')dash();if(k==='f')act('basic');if([' ','w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault()});
 addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys[k]=0;if(k==='w'||k==='arrowup'||k===' ')JH=false});
@@ -780,30 +780,42 @@ $o('onJoin').onclick=()=>{const c=$o('onIn').value.trim();if(c.length<6)return s
 $o('onCopy').onclick=()=>{const c=$o('onCode').textContent;if(c==='------')return;try{navigator.clipboard.writeText(c);st('코드 복사됨: '+c)}catch(e){st('코드: '+c)}};
 })();
 </script><script>
-// ===== 키 설정 =====
+// ===== 키 / 마우스 설정 =====
 (()=>{
-const DEF={left:'a',right:'d',up:'w',down:'s',jump:' ',dash:'shift',parry:'q',attack:'f'};
-const LB={left:'왼쪽 이동',right:'오른쪽 이동',up:'위 / 벽 오르기',down:'아래 / 내려가기',jump:'점프',dash:'대쉬',parry:'패링',attack:'기본 공격'};
-const DV=new Set(Object.values(DEF));let KB=Object.assign({},DEF),listen=null;
-try{const s=JSON.parse(localStorage.getItem('pda_keys')||'{}');for(const a in DEF)if(typeof s[a]==='string'&&s[a])KB[a]=s[a]}catch(e){}
-const nm=k=>k===' '?'SPACE':({arrowup:'↑',arrowdown:'↓',arrowleft:'←',arrowright:'→'})[k]||k.toUpperCase();
-window.kname=a=>nm(KB[a]);
-const save=()=>{try{localStorage.setItem('pda_keys',JSON.stringify(KB))}catch(e){}};
+const DEF={left:'a',right:'d',up:'w',down:'s',jump:' ',dash:'shift',parry:'q',attack:'f'},MDEF={attackM:'mouse0',hook:'mouse2'},DFL=Object.assign({},DEF,MDEF);
+const LB={left:'왼쪽 이동',right:'오른쪽 이동',up:'위 / 벽 오르기',down:'아래 / 내려가기',jump:'점프',dash:'대쉬',parry:'패링',attack:'기본 공격',attackM:'기본 공격 (마우스)',hook:'후크 (누른 채 조준 → 떼면 발사)'};
+const isM=v=>/^mouse\d$/.test(v),MO=a=>a in MDEF,DV=new Set(Object.values(DEF));let KB=Object.assign({},DFL),listen=null,lastA=0;
+try{const s=JSON.parse(localStorage.getItem('pda_keys')||'{}');for(const a in DFL)if(typeof s[a]==='string'&&s[a]&&(!MO(a)||isM(s[a])))KB[a]=s[a]}catch(e){}
+const nm=k=>isM(k)?({mouse0:'마우스 좌클릭',mouse1:'휠 클릭',mouse2:'마우스 우클릭',mouse3:'마우스 4번',mouse4:'마우스 5번'})[k]||k:k===' '?'SPACE':({arrowup:'↑',arrowdown:'↓',arrowleft:'←',arrowright:'→'})[k]||k.toUpperCase();
+window.kname=a=>nm(KB[a]);window.mbtn=a=>isM(KB[a])?+KB[a].slice(5):-1;
+const save=()=>{try{localStorage.setItem('pda_keys',JSON.stringify(KB))}catch(e){}},$k=id=>document.getElementById(id);
+const fire=(type,t)=>{const n=new KeyboardEvent(type,{key:t==='shift'?'Shift':t,bubbles:true});n._r=1;window.dispatchEvent(n)};
 function remap(type){return e=>{if(e._r)return;const t0=e.target&&e.target.tagName;if(t0==='INPUT'||t0==='SELECT'||t0==='TEXTAREA')return;const k=e.key.toLowerCase();
  if(listen){e.stopImmediatePropagation();e.preventDefault();if(type==='keydown')assign(k);return}
- const m={};for(const a in KB)m[KB[a]]=DEF[a];const t=m[k];
+ const m={};for(const a in DEF)if(!isM(KB[a]))m[KB[a]]=DEF[a];const t=m[k];
  if(t===undefined){if(DV.has(k)){e.stopImmediatePropagation();e.preventDefault()}return}
  if(t===k)return;e.stopImmediatePropagation();e.preventDefault();
  const n=new KeyboardEvent(type,{key:t==='shift'?'Shift':t,repeat:e.repeat,bubbles:true});n._r=1;window.dispatchEvent(n)}}
 addEventListener('keydown',remap('keydown'),true);addEventListener('keyup',remap('keyup'),true);
+const mt=type=>e=>{if(e.pointerType!=='mouse')return;
+ if(listen){if(type==='down'&&(e.button!==0||(e.target.closest&&e.target.closest('#kBox')))){e.preventDefault();e.stopImmediatePropagation();assign('mouse'+e.button)}return}
+ if(!G)return;for(const a in DEF)if(KB[a]==='mouse'+e.button)fire(type==='down'?'keydown':'keyup',DEF[a])};
+addEventListener('pointerdown',mt('down'),true);addEventListener('pointerup',mt('up'),true);
+addEventListener('contextmenu',e=>{if(listen||Date.now()-lastA<700)e.preventDefault()},true);
 const P=document.createElement('div');P.className='menuPanel hidden';P.id='keyPanel';
-P.innerHTML='<h2>⌨ 키 설정</h2><div id="kGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:center;text-align:left"></div><small id="kSt">바꿀 항목을 눌러 새 키를 입력하세요 (Esc: 취소)</small><div class="row"><button id="kReset">기본값</button><button id="kBack">돌아가기</button></div><small>화살표 키는 이동에 계속 사용됩니다 · 이미 쓰는 키를 지정하면 서로 교환됩니다 · 일시정지(Esc)는 고정입니다</small>';
-document.getElementById('menu').appendChild(P);
-function draw(){const g=document.getElementById('kGrid');g.innerHTML='';for(const a in DEF){const l=document.createElement('span'),b=document.createElement('button');l.textContent=LB[a];b.textContent=listen===a?'키를 누르세요…':nm(KB[a]);if(listen===a)b.style.borderColor='#ffd54f';b.onclick=()=>{listen=a;document.getElementById('kSt').textContent=LB[a]+': 새 키를 누르세요 (Esc: 취소)';draw()};g.append(l,b)}}
-function assign(k){const a=listen;listen=null;if(k!=='escape'&&k!=='enter'){const o=Object.keys(KB).find(x=>KB[x]===k&&x!==a);if(o)KB[o]=KB[a];KB[a]=k;save();document.getElementById('kSt').textContent=LB[a]+' → '+nm(k)}else document.getElementById('kSt').textContent='취소됨';draw()}
-const sb=document.getElementById('settingsBack'),kb=document.createElement('button');kb.id='keyBtn';kb.textContent='⌨ 키 설정';sb.parentNode.insertBefore(kb,sb);
+P.innerHTML='<h2>⌨ 키 · 마우스 설정</h2><div id="kGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:center;text-align:left"></div><div id="kBox" class="hidden" style="border:2px dashed #ffd54f;padding:8px;color:#ffd54f">🖱 마우스 버튼 지정: 이 상자를 <b>좌클릭</b>하거나, 우클릭·휠 등 다른 버튼은 <b>아무 곳에서나</b> 누르세요</div><small id="kSt">바꿀 항목을 눌러 새 키/버튼을 입력하세요 (Esc: 취소)</small><div class="row"><button id="kReset">기본값</button><button id="kBack">돌아가기</button></div><small>키보드 동작에는 키와 마우스 버튼을 모두 지정할 수 있고, 마우스 공격·후크는 마우스 버튼만 가능합니다 · 이미 쓰는 키/버튼을 지정하면 서로 교환됩니다 · 화살표 키는 이동에 계속 사용 · 일시정지(Esc) 고정</small>';
+$k('menu').appendChild(P);
+function draw(){const g=$k('kGrid');g.innerHTML='';for(const a in DFL){const l=document.createElement('span'),b=document.createElement('button');l.textContent=LB[a];b.textContent=listen===a?'입력 대기…':nm(KB[a]);if(listen===a)b.style.borderColor='#ffd54f';b.onclick=()=>{listen=a;$k('kSt').textContent=LB[a]+': '+(MO(a)?'마우스 버튼':'키 또는 마우스 버튼')+'을 입력하세요 (Esc: 취소)';draw()};g.append(l,b)}$k('kBox').classList.toggle('hidden',!listen)}
+function assign(v){const a=listen,S=$k('kSt');listen=null;lastA=Date.now();
+ if(v==='escape'||v==='enter')S.textContent='취소됨';
+ else if(MO(a)&&!isM(v))S.textContent=LB[a]+'은(는) 마우스 버튼만 지정할 수 있습니다';
+ else{const o=Object.keys(KB).find(x=>KB[x]===v&&x!==a);
+  if(o&&MO(o)&&!isM(KB[a]))S.textContent=nm(v)+'은(는) '+LB[o]+'에 쓰이고 있어 교환할 수 없습니다';
+  else{if(o)KB[o]=KB[a];KB[a]=v;save();S.textContent=LB[a]+' → '+nm(v)}}
+ draw()}
+const sb=$k('settingsBack'),kb=document.createElement('button');kb.id='keyBtn';kb.textContent='⌨ 키 · 마우스 설정';sb.parentNode.insertBefore(kb,sb);
 kb.onclick=()=>{document.querySelectorAll('#menu .menuPanel').forEach(x=>x.classList.add('hidden'));P.classList.remove('hidden');draw()};
-document.getElementById('kBack').onclick=()=>{listen=null;P.classList.add('hidden');showPanel('settingsPanel')};
-document.getElementById('kReset').onclick=()=>{KB=Object.assign({},DEF);listen=null;save();draw()};
+$k('kBack').onclick=()=>{listen=null;P.classList.add('hidden');showPanel('settingsPanel')};
+$k('kReset').onclick=()=>{KB=Object.assign({},DFL);listen=null;save();draw()};
 })();
 </script></body></html>
