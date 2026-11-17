@@ -420,7 +420,7 @@ function drawChar(t,isP){const c=cur(t),px=S(t.x),py=T(t.y),fy=py+7,mv=Math.abs(
  if(!isP){const z=t.kind==='boss'?1.7:1;bar(Math.round(px-9*z),Math.round(py-15*z),Math.round(18*z),2,c.hp,c.max,'#ef5350')}
  else if(!t.dead){const f=Math.max(0,c.hp/c.max),col=f<.25?'#ef5350':f<.5?'#ffb74d':'#66bb6a',bx=px-8,by=py-22;cx.fillStyle='#000';cx.fillRect(bx-1,by-1,18,5);bar(bx,by,16,3,c.hp,c.max,col);const hw=Math.round(16*f);cx.fillStyle='rgba(255,245,157,.7)';cx.fillRect(bx+hw,by,Math.min(16-hw,Math.round(16*c.pool/c.max)),3)}}
 function bar(x,y,w,h,v,m,c){cx.fillStyle='#10131c';cx.fillRect(x,y,w,h);cx.fillStyle=c;cx.fillRect(x,y,Math.round(w*Math.max(0,Math.min(1,v/m))),h)}
-function txt(s,x,y,c,al,sz){sz=sz||8;const F=sz<=8?[8,'Galmuri7']:sz<=10?[10,'Galmuri9']:sz<=16?[12,'Galmuri11']:[24,'Galmuri11'];cx.font=F[0]+'px '+F[1]+',Galmuri11,monospace';cx.textAlign=al||'left';cx.fillStyle='#000';cx.fillText(s,x+1,y+1);cx.fillStyle=c||'#e6e9f0';cx.fillText(s,x,y)}
+function txt(s,x,y,c,al,sz){sz=sz||8;const F=sz<=10?[10,'Galmuri9']:sz<=16?[12,'Galmuri11']:[24,'Galmuri11'];cx.font=F[0]+'px '+F[1]+',Galmuri11,monospace';cx.textBaseline='alphabetic';const tw=cx.measureText(String(s)).width;if(al==='center')x-=tw/2;else if(al==='right')x-=tw;x=Math.round(x);y=Math.round(y);cx.textAlign='left';cx.fillStyle='#000';cx.fillText(s,x+1,y+1);cx.fillStyle=c||'#e6e9f0';cx.fillText(s,x,y)}
 function drawFlash(f){const s=f.sh,al=f.l/8;cx.save();cx.translate(S(f.x),T(f.y));cx.rotate(f.a);cx.globalAlpha=al*.55;cx.fillStyle=f.col;
  if(s.type==='circle'){cx.beginPath();cx.arc(0,0,s.radius*Z,0,6.283);cx.fill();cx.globalAlpha=al;cx.strokeStyle='#fff';cx.stroke()}
  else if(s.arc_deg){const a=s.arc_deg*Math.PI/360,r=s.radius*Z;cx.beginPath();cx.moveTo(0,0);cx.arc(0,0,r,-a,a);cx.closePath();cx.fill();cx.globalAlpha=al;cx.strokeStyle='#fff';cx.beginPath();cx.arc(0,0,r,-a,a);cx.stroke()}
@@ -429,11 +429,11 @@ function drawDeath(d){const t=d.o,k=d.t;if(k>=d.life)return;const ez=Math.min(1,
  cx.save();cx.globalAlpha=d.isP?1:(k>d.life-24?Math.max(0,(d.life-k)/24):1);t.hf=(k<10&&(k>>1)%2===0)?1:0;t.rb=0;t.gr=false;
  cx.translate(S(d.x),T(d.y));cx.rotate(rot);cx.translate(0,7);cx.scale(d.fl,1);if(d.isP)drawHero(t,0);else mobBody(t);
  cx.restore();t.gr=og;t.hf=0}
-function hudDraw(){const[p,e]=G.teams;cx.fillStyle='rgba(8,10,16,.72)';cx.fillRect(0,0,VW,22);
- G.teams.forEach((t,ti)=>{const x0=ti?VW-156:4;t.chars.forEach((c,i)=>{const x=x0+i*76,on=t.a===i,hw=Math.round(70*c.hp/c.max);txt((on?'▶':'')+(ti===0?(PNAME||'플레이어'):c.cn),x,8,c.ko?'#777':on?'#fff':'#98a1b3');bar(x,10,70,4,c.hp,c.max,c.ko?'#555':ti?'#ef5350':'#66bb6a');cx.fillStyle='rgba(255,245,157,.65)';cx.fillRect(x+hw,10,Math.min(70-hw,Math.round(70*c.pool/c.max)),4);bar(x,15,70,2,c.gauge,GMAX,c.gauge>=GMAX?'#ffd54f':'#7e57c2')})});
- txt((G.mode==='story'?'CH '+CH.id+'  '+Math.min(G.wave,CH.w.length)+'/'+CH.w.length:G.mode==='pvp'?'PVP':'WAVE '+G.wave),VW/2,9,'#ffd54f','center');if(G.nw>0)txt('클리어! 다음 적 접근 중…',VW/2,19,'#fff','center',7);
- for(let i=0;i<3;i++){const x=VW/2-27+i*20,f=Math.max(0,Math.min(1,p.gs-i));cx.fillStyle='#171c28';cx.fillRect(x,VH-14,16,9);cx.fillStyle=f>=1?'#ffd54f':'#7e6a2a';cx.fillRect(x,VH-14,Math.round(16*f),9);cx.strokeStyle='#000';cx.strokeRect(x+.5,VH-13.5,15,8)}if(p.gm>0)txt('붙잡기 '+(p.gm/60).toFixed(1)+'s',VW/2,VH-18,'#ffd54f','center',7);
- txt('클릭 공격 · 드래그 조준 후 놓아 붙잡기 · Q 패링 · SHIFT 대쉬',VW/2,VH-26,'#9bb0ff','center',7)}
+function hudDraw(){const[p,e]=G.teams;cx.fillStyle='rgba(8,10,16,.72)';cx.fillRect(0,0,VW,26);
+ G.teams.forEach((t,ti)=>{const x0=ti?VW-156:4;t.chars.forEach((c,i)=>{const x=x0+i*76,on=t.a===i,hw=Math.round(70*c.hp/c.max);txt((on?'▶':'')+(ti===0?(PNAME||'플레이어'):c.cn),x,11,c.ko?'#777':on?'#fff':'#98a1b3');bar(x,14,70,4,c.hp,c.max,c.ko?'#555':ti?'#ef5350':'#66bb6a');cx.fillStyle='rgba(255,245,157,.65)';cx.fillRect(x+hw,14,Math.min(70-hw,Math.round(70*c.pool/c.max)),4);bar(x,19,70,2,c.gauge,GMAX,c.gauge>=GMAX?'#ffd54f':'#7e57c2')})});
+ txt((G.mode==='story'?'CH '+CH.id+'  '+Math.min(G.wave,CH.w.length)+'/'+CH.w.length:G.mode==='pvp'?'PVP':'WAVE '+G.wave),VW/2,11,'#ffd54f','center');if(G.nw>0)txt('클리어! 다음 적 접근 중…',VW/2,24,'#fff','center',7);
+ for(let i=0;i<3;i++){const x=VW/2-27+i*20,f=Math.max(0,Math.min(1,p.gs-i));cx.fillStyle='#171c28';cx.fillRect(x,VH-14,16,9);cx.fillStyle=f>=1?'#ffd54f':'#7e6a2a';cx.fillRect(x,VH-14,Math.round(16*f),9);cx.strokeStyle='#000';cx.strokeRect(x+.5,VH-13.5,15,8)}if(p.gm>0)txt('붙잡기 '+(p.gm/60).toFixed(1)+'s',VW/2,VH-20,'#ffd54f','center',7);
+ txt('클릭 공격 · 드래그 조준 후 놓아 붙잡기 · Q 패링 · SHIFT 대쉬',VW/2,VH-33,'#9bb0ff','center',7)}
 function render(){pBtn.style.display=(G&&!G.over)?'flex':'none';cx.clearRect(0,0,VW,VH);const p=G?G.teams[0]:null;
  if(!G){camX+=.4;if(camX>FL.width-VW)camX=0;camY=144}
  else{const cf=G.cine?{x:G.cine.b?G.cine.b.x:p.x,y:GY-14}:p;camX+=(Math.max(0,Math.min(FL.width-VW,cf.x*Z-VW/2))-camX)*.12;camY+=(Math.max(0,Math.min(FL.height-VH,cf.y*Z-VH/2))-camY)*.1}
