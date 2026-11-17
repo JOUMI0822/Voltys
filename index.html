@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
-<title>PIXEL DUO ARENA · Chain & Gun</title>
+<title>VOLTIS · PIXEL DUO ARENA</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html,body{margin:0;height:100%;background:#07090e;color:#e6e9f0;font:15px/1.5 system-ui,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -463,10 +463,10 @@ function ai(t,en){const c=cur(t),r=DATA.weapons[c.wk].range,dx=en.x-t.x,dy=en.y-
  if(c.wk==='chain'){if(t.cg){t.ct=(t.ct||0)+1;if(t.ct>26){t.ct=0;if(t.cg.k==='enemy')Math.random()<.5?slam(t):throwIt(t,t.x<AW/2?Math.PI+.35:-.35);else throwIt(t,Math.atan2(en.y-t.y,en.x-t.x))}}else if(!t.act&&t.stun<=0&&(t.gcd||0)<=0&&Math.random()<.02)grab(t,en,t.face)}
  if(!t.act&&t.stun<=0){if(c.hp<c.max*.3&&Math.random()<.03)doSwitch(t);else if(Math.random()<.07*(t.aggr||1))for(const s of['ultimate','skill_1','skill_2','skill_3','basic']){const k=c.slots[s];if(k&&reach(k)>=d-R&&tryUse(t,s))break}}
  return[mx,0]}
-const KIND={bot:{n:'정찰 로봇',wk:'blade_short',pk:'accelerate',hp:240},gunner:{n:'포격 드론봇',wk:'gun_single',pk:'heat',hp:200},beast:{n:'암굴 괴수',wk:'blade_long',pk:'cold',hp:380},boss:{n:'철갑 거신',wk:'blade_long',pk:'heat',hp:1100}};
+const KIND={bot:{n:'볼쳐 정찰형',wk:'blade_short',pk:'accelerate',hp:240},gunner:{n:'볼쳐 포격형',wk:'gun_single',pk:'heat',hp:200},beast:{n:'볼티스 변이체',wk:'blade_long',pk:'cold',hp:380},boss:{n:'볼티쳐',wk:'blade_long',pk:'heat',hp:1100}};
 function mkEnemy(w,mode){let ck=null;if(mode==='story'&&CH){ck=CH.w[w-1];w=w+Math.max(0,CH.i-1)*2}const tut=mode==='tutorial'||!!(ck&&CH.tut),boss=!tut&&(ck?ck==='boss':w%5===0),pool=boss?['boss']:w<3?['bot']:w<6?['bot','gunner']:['bot','gunner','beast'],k=ck||rnd(pool),d=KIND[k],t=mkTeam(1,[[d.pk,d.wk]]),c=t.chars[0];
  t.kind=k;c.cn=d.n;c.max=c.hp=Math.round(d.hp*(1+.12*(w-1))*(tut?3:1));t.dm=tut?0:1+.05*(w-1);t.spd=boss?1:Math.min(1.5,1+.02*(w-1));t.aggr=Math.min(2.2,1+.05*(w-1));if(boss){c.max=c.hp=Math.round(c.max*.88);t.dm*=.8;t.aggr*=.7}return t}
-function spawnWave(){if(G.mode==='story'){const last=G.wave>CH.w.length,sc=last?CH.outro:(G.wave===2?CH.after:null);if(sc&&G.sd!==G.wave){G.sd=G.wave;startScene(sc,spawnWave);return}if(last){G.over=3;PROG=Math.max(PROG,CH.i+1);saveProgress();return}}const t=mkEnemy(G.wave,G.mode),p=G.teams[0],sx=p.x>AW/2?-1:1;
+function spawnWave(){if(G.mode==='story'){const last=G.wave>CH.w.length,sc=last?CH.outro:(G.wave===2&&CH.after&&CH.after.length?CH.after:(G.wave===3&&CH.after2?CH.after2:null));if(sc&&G.sd!==G.wave){G.sd=G.wave;startScene(sc,spawnWave);return}if(last){G.over=3;PROG=Math.max(PROG,CH.i+1);saveProgress();return}}const t=mkEnemy(G.wave,G.mode),p=G.teams[0],sx=p.x>AW/2?-1:1;
  t.x=Math.max(120,Math.min(AW-120,p.x+sx*(500+Math.random()*200)));t.y=100;G.teams[1]=t;G.pr=[];
  for(const c of p.chars){if(c.ko){c.ko=false;c.hp=c.max*(t.kind==='boss'?.7:.4)}else c.hp=Math.min(c.max,c.hp+c.max*(t.kind==='boss'?.7:.4));c.pool=0}
  if(t.kind==='boss'){t.y=-400;G.cine={type:'boss',t:0,b:t}}else boom(t.x,t.y,'#ff5a5a')}
@@ -601,14 +601,15 @@ function chainFx(){const p=G.teams[0];
 let JH=false;function jump(){if(G&&!G.over&&!G.paused&&!G.cine)G.teams[0].jr=6}
 {const b=document.getElementById('bJ');b.addEventListener('pointerdown',e=>{e.preventDefault();JH=true;jump()});['pointerup','pointercancel','pointerleave'].forEach(n=>b.addEventListener(n,()=>JH=false))}
 let CH=null,PROG=0;const PROG_KEY='pda_prog_v2';try{PROG=Math.max(0,Math.min(6,Number(localStorage.getItem(PROG_KEY)??localStorage.getItem('pda_prog'))||0));localStorage.setItem(PROG_KEY,String(PROG))}catch(e){}function saveProgress(){try{localStorage.setItem(PROG_KEY,String(PROG));localStorage.setItem('pda_prog',String(PROG))}catch(e){}}
-const SP={h:'하루',i:'아이리스',b:'철갑 거신',e:'???'},SC={h:'#4fc3f7',i:'#6ee7b7',b:'#ff5a5a',e:'#ffd54f'};
+const SP={h:'하루',i:'아이리스',b:'볼티쳐',e:'???',n:''},SC={h:'#4fc3f7',i:'#6ee7b7',b:'#ff5a5a',e:'#ffd54f',n:'#cfd3ff'};
 const CHS=[
-{id:'0',t:'프롤로그 · 깨어난 사슬',st:'ruins',tut:1,w:['bot'],intro:['i|…연결 확인. 하루, 눈 떴어?','h|…여긴 어디지? 도시가 왜 이 모양이야.','i|10년 전 군단 AI "철갑"이 폭주했어. 도시는 기계와 괴수의 전장이 됐지.','i|우리 듀오는 마지막 저항선이야. 나는 통신과 분석, 너는 사슬을 쓰는 전위.','h|좋아, 몸부터 풀자. 사슬은 어떻게 쓰더라…','i|기억을 되살려 줄게. 내 지시를 따라와!'],after:[],outro:['i|훌륭해! 감각이 돌아왔어.','h|이제 철갑의 신호를 쫓는다. 폐허부터 시작하자.']},
-{id:'1-1',t:'황혼의 폐허',st:'ruins',w:['bot','bot','bot'],intro:['i|하루, 폐허 구역에서 기계 군단 신호가 잡혔어.','h|사슬 하나면 충분해. 들어간다.'],after:['h|워밍업은 끝났어.','i|아직이야, 더 많은 신호가 몰려와!'],outro:['h|전부 정리했어. 근데 이 녀석들, 누군가의 명령을 받고 있었어.','i|신호를 추적할게. 다음은 북쪽 기계 공장이야.']},
-{id:'1-2',t:'기계 공장',st:'factory',w:['bot','gunner','bot'],intro:['i|공장 라인이 아직 가동 중이야. 드론봇이 사격할 거야.','h|패링으로 되받아쳐 주지.'],after:['h|총알을 되돌려주니까 편하네.','i|3번 라인에서 또 온다. 방심 마!'],outro:['i|제어 신호의 출처는 하늘 위야.','h|공중 정원… 거기에 누가 있다는 거네.']},
-{id:'1-3',t:'공중 정원',st:'sky',w:['gunner','bot','gunner'],intro:['i|발판이 좁아. 떨어지면 끝이야, 하루.','h|사슬로 매달리면 돼. 걱정 마.'],after:['h|높이는 내 쪽이 유리하네.','i|정원 중심부에서 거대한 반응이 감지돼…'],outro:['e|…계속 올라오는군. 귀찮은 쥐새끼.','h|방금 그 목소리… 누구지?','i|연결이 끊겼어. 수정 동굴로 이어지는 길이 열렸어.']},
-{id:'1-4',t:'수정 동굴',st:'cave',w:['beast','bot','beast'],intro:['i|동굴 괴수는 기계가 아니야. 개조된 생명체 같아.','h|누가 이런 짓을…'],after:['h|이 녀석들, 눈이 슬퍼 보였어.','i|하루… 놈들의 목적지는 지휘소야.'],outro:['i|지휘소 위치를 찾았어. 폐허 한가운데야.','h|돌아가자. 모든 걸 끝낼 시간이야.']},
-{id:'1-5',t:'지휘소',st:'ruins',w:['gunner','beast','boss'],intro:['i|여기가 지휘소야. 최종 방어선이 남았어.','h|길을 열어 줘야겠네.'],after:['h|거의 다 왔어.','b|침입자 확인. 철갑 거신, 가동한다.'],outro:['h|…끝났나.','i|신호가 사라졌어. 하지만 배후는 아직 남아 있어.','h|다음 전장이 기다리고 있겠지. 가자, 아이리스.']}];
+{id:'0',t:"프롤로그 · 깨어난 사슬",st:'ruins',tut:1,w:['bot'],intro:["n|인류는 새로운 시대를 열었다. 모든 것을 움직이는 에너지, 볼티스.","n|그러나 그 힘은 결국 통제를 벗어났다. 10년 전, 볼티스 대폭주.","n|그날 이후, 세계는 무너졌다.","i|…통신 연결 확인. 하루, 내 목소리 들려?","h|…여긴 어디지? 도시가 왜 이렇게 된 거야?","i|10년 전 볼티스 대폭주가 일어났어. 기계 군단이 통제를 벗어났고, 대부분의 도시는 폐허가 됐지.","h|10년 전…?","i|기억이 돌아오지 않는 거야? 괜찮아, 지금은 살아남는 게 먼저야.","i|주변에 볼쳐 반응이 감지돼. 내가 하나씩 알려줄게."],after:[],outro:["i|훌륭해. 전투 감각이 돌아왔어.","h|그런데 왜 볼쳐들이 아직도 움직이는 거지?","i|단순한 자동 방어 시스템이 아니야. 누군가가 이들을 지휘하고 있어.","h|그 신호를 추적할 수 있어?","i|가능해. 신호는 북쪽 폐허에서 시작됐어.","h|좋아. 가보자."]},
+{id:'1-1',t:"황혼의 폐허",st:'ruins',w:['bot','bot','bot'],intro:["i|하루, 폐허 구역에서 볼티스 반응이 감지됐어. 볼쳐들이 아직 순찰 중이야.","h|이곳을 지키고 있는 건가?","i|아니. 무언가를 찾고 있는 것 같아.","h|그럼 직접 물어보자."],after:["h|생각보다 움직임이 단순하네.","i|주의해. 다른 신호가 접근 중이야. 볼쳐들이 서로 정보를 공유하고 있어."],outro:["h|전부 정리했어. 그런데 이 녀석들, 누군가의 명령을 받고 있었어.","i|신호를 분석했어. 북쪽 기계 공장에서 명령이 전달되고 있어.","i|방금 그 반응… 이상해. 쓰러진 볼쳐의 눈이 잠깐 푸르게 깜빡였어.","h|좋아. 다음 목적지는 기계 공장이야."]},
+{id:'1-2',t:"기계 공장",st:'factory',w:['bot','gunner','bot'],intro:["i|공장 라인이 아직 가동 중이야. 볼티스가 계속 생산되고 있어.","h|10년 전 사건 이후에도 공장이 돌아간다고?","i|이상해. 중앙 시스템은 이미 정지했어야 해. 포격형 볼쳐가 감지됐어, 조심해!","h|원거리 공격이라면 패링으로 되돌려 주지."],after:["h|이 공장, 아직도 볼티스를 만들고 있어.","i|생산량이 정상보다 훨씬 높아. 누군가 일부러 출력을 올리고 있어."],outro:["i|제어 신호를 추적했어. 출처는 하늘 위야.","h|하늘 위?","i|공중 정원이라는 시설이 있어. 하지만 신호가 계속 변하고 있어.","h|방금 저 붉은 결정 안에 뭔가 있었어. 사람 같은 형상이…","i|데이터가 손상됐어. 확인할 수 없어."]},
+{id:'1-3',t:"공중 정원",st:'sky',w:['gunner','bot','gunner'],intro:["i|여기는 공중 정원이야. 발판이 좁고 구조물이 불안정해. 떨어지지 않게 조심해.","h|걱정 마. 사슬이 있잖아.","i|중심부에서 거대한 볼티스 반응이 감지돼."],after:["h|이곳의 볼쳐들은 다른 곳보다 강해.","i|중심부에서 직접 명령을 내리고 있는 것 같아. 잠깐… 누군가 접속을 시도해!"],outro:["e|…계속 올라오는군.","e|귀찮은 침입자.","h|방금 그 목소리… 누구지?","i|확인할 수 없어. 통신이 강제로 차단됐어. 신호가 지하로 이동했어.","i|수정 동굴로 이어지는 길이 열렸어.","h|우리 존재를 알고 있다는 거네. 이번에는 직접 만나 보자."]},
+{id:'1-4',t:"수정 동굴",st:'cave',w:['beast','bot','beast'],intro:["i|여기는 수정 동굴이야. 동굴 전체에서 강한 볼티스 반응이 나와.","h|볼쳐가 아닌 생명체도 있는 것 같은데?","i|맞아. 볼티스에 노출되어 변이한 생명체야. 반응이 불안정하니 가까이 붙지 마."],after:["h|이 녀석들… 처음부터 공격하려던 건 아닌 것 같아.","i|볼티스가 신체에 영향을 주고 있어. 누군가 이 에너지를 생명체에게 쓴 거야."],outro:["i|동굴의 신호를 분석했어. 모든 신호가 폐허 중앙의 지휘소로 모이고 있어.","n|VOLTICHER SYSTEM  ·  CORE SIGNAL ACTIVE","h|볼티쳐…?","i|그 이름을 어떻게 알고 있는 거야?","h|모르겠어. 그냥 머릿속에 떠올랐어."]},
+{id:'1-5',t:"지휘소",st:'ruins',w:['gunner','beast','boss'],intro:["i|여기가 지휘소야. 모든 볼쳐의 신호가 이곳으로 모이고 있어.","h|이곳을 무너뜨리면 끝나는 거겠지?","i|그렇게 간단하지 않을 거야. 바로 앞에서 강력한 볼티스 반응이 감지돼.","h|그럼 끝을 보자."],after:["h|방어 병력은 정리했어.","i|아직이야! 중앙 시스템이 활성화되고 있어. 볼티스 출력이 급격히 상승해!"],after2:["b|침입자 확인. 볼티스 반응 분석 중. 대상: 하루.","h|내 이름을 알고 있다고?","b|오랜만이군.","i|잠깐… 이 목소리…","b|10년 전의 실수를 반복할 생각인가? 볼티스는 너희가 다룰 힘이 아니다.","h|그래서 도시를 파괴하고 사람들을 공격한 거냐?","b|나는 세계를 멸망시키려는 것이 아니다. 너희가 다시는 볼티스를 쓸 수 없게 만들 뿐이다.","i|하루, 조심해! 강력한 에너지가 모이고 있어! 에너지 코어를 노려!","b|제거 절차를 시작한다."],outro:["h|끝났나…?","b|…하루. 너는 아직 아무것도 기억하지 못하는군.","h|10년 전 나에게 무슨 일이 있었던 거지?","b|볼티스는… 시작에 불과하다.","i|하루! 코어가 폭발해! 즉시 후퇴해!","i|하루! 정신이 들어? 볼티쳐의 신호는 사라졌어.","i|하지만 사라지기 직전, 볼티스 중심부에서 새로운 신호가 발생했어. 볼티쳐는 최종 목적지가 아니었던 것 같아.","i|그리고 하루… 볼티쳐가 너를 알고 있었어.","h|나도 느꼈어. 10년 전의 기억을 찾아야겠어.","n|볼티스의 진실은 아직 밝혀지지 않았다.  ·  CHAPTER 2 잊혀진 중심부"]}];
+function scn(c){const r=[['인트로',c.intro]];if(c.after&&c.after.length)r.push(['중간 대사',c.after]);if(c.after2&&c.after2.length)r.push(['보스 등장',c.after2]);r.push(['아웃트로',c.outro]);return r}
 CHS.forEach((c,i)=>c.i=i);
 function startScene(L,done){G.scene={l:L.map(x=>{const a=x.split('|');return{s:a[0],t:a.slice(1).join('|')}}),i:0,c:0,done};G.paused=1;atk.on=0}
 function sceneUpd(){const sc=G.scene;if(sc&&sc.c<sc.l[sc.i].t.length)sc.c+=.6}
@@ -634,9 +635,9 @@ function tutUpd(){const p=G.teams[0],e=G.teams[1],t=G.tu=G.tu||{s:0,d:0,lx:p.x},
  if(t.s>=TS.length){h.classList.add('hidden');return}h.classList.remove('hidden');h.textContent='아이리스: '+TS[t.s][0];
  if(TS[t.s][1](p,e,t)){t.s++;G.pop.push({x:p.x,y:p.y-34,s:'OK!',c:'#6ee7b7',l:40});ring(p.x,p.y,30,'#6ee7b7');if(t.s>=TS.length){h.classList.add('hidden');G.wave=CH.w.length+1;G.nw=70}}}
 function buildGallery(){const g=document.getElementById('galList');g.innerHTML='';if(!PROG){g.textContent='아직 감상할 장면이 없어요. 스토리 모드를 플레이해 보세요!';return}
- const all=[];CHS.forEach((c,i)=>{if(i<PROG)all.push(c.intro,...c.after,c.outro)});const ab=document.createElement('button');ab.textContent='🎞 처음부터 이어서 보기';ab.className='primary';ab.onclick=()=>galStart(all);g.appendChild(ab);
+ const all=[];CHS.forEach((c,i)=>{if(i<PROG)all.push(...scn(c).map(x=>x[1]))});const ab=document.createElement('button');ab.textContent='🎞 처음부터 이어서 보기';ab.className='primary';ab.onclick=()=>galStart(all);g.appendChild(ab);
  CHS.forEach((c,i)=>{if(i>=PROG)return;const d=document.createElement('div'),h=document.createElement('div'),r=document.createElement('div');h.textContent=(c.id==='0'?'':c.id+' · ')+c.t;h.style.cssText='color:#ffd54f;font:bold 13px monospace;text-align:left;margin:8px 0 4px';d.appendChild(h);
-  const sc=[['인트로',c.intro],...c.after.map((a,k)=>['웨이브 '+(k+1)+' 후',a]),['아웃트로',c.outro]];r.className='row';
+  const sc=scn(c);r.className='row';
   sc.forEach(x=>{const b=document.createElement('button');b.textContent=x[0];b.onclick=()=>galStart([x[1]]);r.appendChild(b)});
   const pa=document.createElement('button');pa.textContent='▶ 전체 재생';pa.onclick=()=>galStart(sc.map(x=>x[1]));r.appendChild(pa);d.appendChild(r);g.appendChild(d)})}
 const launchCh=c=>{chosenMode='story';CH=c;document.getElementById('stageSelect').value=c.st;launchSelected(false)};
