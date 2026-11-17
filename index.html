@@ -433,7 +433,7 @@ function hudDraw(){const[p,e]=G.teams;cx.fillStyle='rgba(8,10,16,.72)';cx.fillRe
  G.teams.forEach((t,ti)=>{const x0=ti?VW-156:4;t.chars.forEach((c,i)=>{const x=x0+i*76,on=t.a===i,hw=Math.round(70*c.hp/c.max);txt((on?'▶':'')+(ti===0?(PNAME||'플레이어'):c.cn),x,11,c.ko?'#777':on?'#fff':'#98a1b3');bar(x,14,70,4,c.hp,c.max,c.ko?'#555':ti?'#ef5350':'#66bb6a');cx.fillStyle='rgba(255,245,157,.65)';cx.fillRect(x+hw,14,Math.min(70-hw,Math.round(70*c.pool/c.max)),4);bar(x,19,70,2,c.gauge,GMAX,c.gauge>=GMAX?'#ffd54f':'#7e57c2')})});
  txt((G.mode==='story'?'CH '+CH.id+'  '+Math.min(G.wave,CH.w.length)+'/'+CH.w.length:G.mode==='pvp'?'PVP':'WAVE '+G.wave),VW/2,11,'#ffd54f','center');if(G.nw>0)txt('클리어! 다음 적 접근 중…',VW/2,24,'#fff','center',7);
  for(let i=0;i<3;i++){const x=VW/2-27+i*20,f=Math.max(0,Math.min(1,p.gs-i));cx.fillStyle='#171c28';cx.fillRect(x,VH-14,16,9);cx.fillStyle=f>=1?'#ffd54f':'#7e6a2a';cx.fillRect(x,VH-14,Math.round(16*f),9);cx.strokeStyle='#000';cx.strokeRect(x+.5,VH-13.5,15,8)}if(p.gm>0)txt('붙잡기 '+(p.gm/60).toFixed(1)+'s',VW/2,VH-20,'#ffd54f','center',7);
- txt('좌클릭 공격 · 우클릭 누른 채 조준→놓아 후크 · Q 패링 · SHIFT 대쉬',VW/2,VH-33,'#9bb0ff','center',7)}
+ txt('좌클릭 공격 · 우클릭 누른 채 조준→놓아 후크 · '+kname('parry')+' 패링 · '+kname('dash')+' 대쉬',VW/2,VH-33,'#9bb0ff','center',7)}
 function render(){pBtn.style.display=(G&&!G.over)?'flex':'none';cx.clearRect(0,0,VW,VH);const p=G?G.teams[0]:null;
  if(!G){camX+=.4;if(camX>FL.width-VW)camX=0;camY=144}
  else{const cf=G.cine?{x:G.cine.b?G.cine.b.x:p.x,y:GY-14}:p;camX+=(Math.max(0,Math.min(FL.width-VW,cf.x*Z-VW/2))-camX)*.12;camY+=(Math.max(0,Math.min(FL.height-VH,cf.y*Z-VH/2))-camY)*.1}
@@ -778,5 +778,32 @@ $o('onCancel').onclick=()=>{if(sock)sock.emit('match:cancel',()=>st('매칭 취�
 $o('onMake').onclick=()=>connect(()=>sock.emit('room:create',{mode:'pvp'},a=>{if(!a.ok)return st(a.error);$o('onCode').textContent=a.code;st('친구에게 코드를 알려 주세요. 접속 대기 중…')}));
 $o('onJoin').onclick=()=>{const c=$o('onIn').value.trim();if(c.length<6)return st('6자리 코드를 입력하세요');connect(()=>sock.emit('room:join',{code:c},a=>st(a.ok?'입장 완료…':a.error)))};
 $o('onCopy').onclick=()=>{const c=$o('onCode').textContent;if(c==='------')return;try{navigator.clipboard.writeText(c);st('코드 복사됨: '+c)}catch(e){st('코드: '+c)}};
+})();
+</script><script>
+// ===== 키 설정 =====
+(()=>{
+const DEF={left:'a',right:'d',up:'w',down:'s',jump:' ',dash:'shift',parry:'q',attack:'f'};
+const LB={left:'왼쪽 이동',right:'오른쪽 이동',up:'위 / 벽 오르기',down:'아래 / 내려가기',jump:'점프',dash:'대쉬',parry:'패링',attack:'기본 공격'};
+const DV=new Set(Object.values(DEF));let KB=Object.assign({},DEF),listen=null;
+try{const s=JSON.parse(localStorage.getItem('pda_keys')||'{}');for(const a in DEF)if(typeof s[a]==='string'&&s[a])KB[a]=s[a]}catch(e){}
+const nm=k=>k===' '?'SPACE':({arrowup:'↑',arrowdown:'↓',arrowleft:'←',arrowright:'→'})[k]||k.toUpperCase();
+window.kname=a=>nm(KB[a]);
+const save=()=>{try{localStorage.setItem('pda_keys',JSON.stringify(KB))}catch(e){}};
+function remap(type){return e=>{if(e._r)return;const t0=e.target&&e.target.tagName;if(t0==='INPUT'||t0==='SELECT'||t0==='TEXTAREA')return;const k=e.key.toLowerCase();
+ if(listen){e.stopImmediatePropagation();e.preventDefault();if(type==='keydown')assign(k);return}
+ const m={};for(const a in KB)m[KB[a]]=DEF[a];const t=m[k];
+ if(t===undefined){if(DV.has(k)){e.stopImmediatePropagation();e.preventDefault()}return}
+ if(t===k)return;e.stopImmediatePropagation();e.preventDefault();
+ const n=new KeyboardEvent(type,{key:t==='shift'?'Shift':t,repeat:e.repeat,bubbles:true});n._r=1;window.dispatchEvent(n)}}
+addEventListener('keydown',remap('keydown'),true);addEventListener('keyup',remap('keyup'),true);
+const P=document.createElement('div');P.className='menuPanel hidden';P.id='keyPanel';
+P.innerHTML='<h2>⌨ 키 설정</h2><div id="kGrid" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:center;text-align:left"></div><small id="kSt">바꿀 항목을 눌러 새 키를 입력하세요 (Esc: 취소)</small><div class="row"><button id="kReset">기본값</button><button id="kBack">돌아가기</button></div><small>화살표 키는 이동에 계속 사용됩니다 · 이미 쓰는 키를 지정하면 서로 교환됩니다 · 일시정지(Esc)는 고정입니다</small>';
+document.getElementById('menu').appendChild(P);
+function draw(){const g=document.getElementById('kGrid');g.innerHTML='';for(const a in DEF){const l=document.createElement('span'),b=document.createElement('button');l.textContent=LB[a];b.textContent=listen===a?'키를 누르세요…':nm(KB[a]);if(listen===a)b.style.borderColor='#ffd54f';b.onclick=()=>{listen=a;document.getElementById('kSt').textContent=LB[a]+': 새 키를 누르세요 (Esc: 취소)';draw()};g.append(l,b)}}
+function assign(k){const a=listen;listen=null;if(k!=='escape'&&k!=='enter'){const o=Object.keys(KB).find(x=>KB[x]===k&&x!==a);if(o)KB[o]=KB[a];KB[a]=k;save();document.getElementById('kSt').textContent=LB[a]+' → '+nm(k)}else document.getElementById('kSt').textContent='취소됨';draw()}
+const sb=document.getElementById('settingsBack'),kb=document.createElement('button');kb.id='keyBtn';kb.textContent='⌨ 키 설정';sb.parentNode.insertBefore(kb,sb);
+kb.onclick=()=>{document.querySelectorAll('#menu .menuPanel').forEach(x=>x.classList.add('hidden'));P.classList.remove('hidden');draw()};
+document.getElementById('kBack').onclick=()=>{listen=null;P.classList.add('hidden');showPanel('settingsPanel')};
+document.getElementById('kReset').onclick=()=>{KB=Object.assign({},DEF);listen=null;save();draw()};
 })();
 </script></body></html>
