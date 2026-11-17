@@ -50,14 +50,14 @@ small{color:#98a1b3;max-width:620px;font-size:12px}
 <div id="dlg" class="hidden"><b id="dlgN"></b><span id="dlgT"></span></div><div id="dlgH" class="hidden">탭 / Enter: 다음 · X: 건너뛰기</div><div id="hint" class="hidden"></div>
 <div id="editBar" class="hidden"><span>버튼 편집: 드래그로 이동 · 선택 후 크기</span><input id="editSize" type="range" min="50" max="200" value="100"><span id="editSizeV">-</span><button id="editDone">완료</button></div>
 <div id="menu" class="ov"><div class="menuPanel bare" id="mainPanel"><div class="logo">PIXEL<br>DUO ARENA</div><div class="sub">CHAIN · PARRY · PARKOUR</div>
-<div class="mcol"><button class="big primary" id="storyBtn">▶ 스토리 모드</button><button class="big" id="galBtn">🎬 감상하기</button><button class="big" id="endlessBtn">∞ 무한 웨이브</button><button class="big" id="tutorialBtn">? 조작법 · 연습</button><button class="big" id="settingsBtn">⚙ 설정</button></div><small id="mainHint">사슬로 붙잡고, 패링으로 되받아쳐라</small></div>
+<div class="mcol"><button class="big primary" id="storyBtn">▶ 스토리 모드</button><button class="big" id="galBtn">🎬 감상하기</button><button class="big" id="endlessBtn">∞ 무한 웨이브</button><button class="big" id="tutorialBtn">? 조작법 · 연습</button><button class="big" id="settingsBtn">⚙ 설정</button><button class="big" id="onlineBtn">🌐 온라인 대전 · 친구와 플레이</button><button class="big" id="onCoopBtn" disabled>🤝 온라인 협동 · 준비 중</button></div><small id="mainHint">사슬로 붙잡고, 패링으로 되받아쳐라</small></div>
 <div class="menuPanel hidden" id="stagePanel"><h2>무한 웨이브 · 전장 선택</h2><div class="row">전장 <select id="stageSelect"><option value="random">무작위 전장</option><option value="ruins">황혼의 폐허</option><option value="factory">기계 공장</option><option value="sky">공중 정원</option><option value="cave">수정 동굴</option></select></div><div class="row"><button class="primary" id="go">전장 입장</button><button id="stageBack">돌아가기</button></div></div>
 <div class="menuPanel hidden" id="galleryPanel"><h2>🎬 감상하기</h2><div id="galList"></div><div class="row"><button id="galBack">돌아가기</button></div></div>
 <div class="menuPanel hidden" id="storyPanel"><h2>스토리 모드 · 챕터 선택</h2><div class="menuGrid" id="chGrid"></div><div class="row"><button id="storyBack">돌아가기</button></div></div>
 <div class="menuPanel hidden" id="settingsPanel"><h2>설정</h2><label class="setting">화면 흔들림 <input id="shakeSetting" type="range" min="0" max="100" value="70"><span id="shakeValue">70%</span></label><label class="setting">버튼 크기 <input id="buttonSize" type="range" min="70" max="140" value="100"><span id="buttonValue">100%</span></label><label class="setting">버튼 투명도 <input id="buttonAlpha" type="range" min="20" max="100" value="75"><span id="alphaValue">75%</span></label><div class="row">플레이어 이름 <input type="text" id="setName" maxlength="8" autocomplete="off"><button id="setNameOk">적용</button></div><div class="row"><button id="soundMusic" disabled>음악 조절 · 준비 중</button><button id="soundFx" disabled>효과음 조절 · 준비 중</button></div><div class="row"><button id="lockBtn">버튼 위치 잠금: 켜짐</button><button id="resetButtons">버튼 위치 초기화</button><button id="settingsBack">돌아가기</button></div><small>잠금을 해제(🔓)하면 게임 화면에서 버튼을 드래그해 옮기고, 선택한 버튼의 크기를 따로 조절할 수 있습니다. 편집 중에는 게임이 일시정지되고 버튼이 작동하지 않습니다.</small></div>
-<div class="menuPanel hidden" id="namePanel"><h2>플레이어 이름 설정</h2><p style="margin:0;font-size:12px">프롤로그 클리어! 화면 위에 표시될 이름을 정해 주세요.<br>(최대 8자 · 설정에서 언제든 변경 가능)</p><div class="row"><input type="text" id="nameInput" maxlength="8" placeholder="이름 입력" autocomplete="off"><button id="nameOk" class="primary">확인</button></div></div>
+<div class="menuPanel hidden" id="onlinePanel"><h2>🌐 온라인 대전 (1:1)</h2><div class="row"><button class="primary" id="onRand">⚔ 랜덤 매칭</button><button id="onCancel">매칭 취소</button></div><div class="row"><button id="onMake">방 만들기</button><input type="text" id="onIn" maxlength="6" placeholder="초대 코드" autocomplete="off"><button id="onJoin">참가</button></div><div class="row">초대 코드: <b id="onCode">------</b><button id="onCopy">복사</button></div><small id="onSt">대기 중</small><div class="row"><button id="onBack">돌아가기</button></div></div><div class="menuPanel hidden" id="namePanel"><h2>플레이어 이름 설정</h2><p style="margin:0;font-size:12px">프롤로그 클리어! 화면 위에 표시될 이름을 정해 주세요.<br>(최대 8자 · 설정에서 언제든 변경 가능)</p><div class="row"><input type="text" id="nameInput" maxlength="8" placeholder="이름 입력" autocomplete="off"><button id="nameOk" class="primary">확인</button></div></div>
 <div class="menuPanel hidden" id="tutorialPanel"><h2>튜토리얼</h2><p style="margin:0;text-align:left;font-size:12px">• 이동: A/D 또는 ◀ ▶ 버튼 (연습 모드의 적은 피해를 주지 않습니다)<br>• 점프: W/Space 또는 ▲. 공중에서 한 번 더 누르면 2단 점프<br>• 대쉬: Shift<br>• 패링: Q. 공격이 닿는 순간에 사용하면 반격 기회<br>• 공격 조이스틱: 터치 = 근접 기본 공격, 드래그 후 놓기 = 사슬 공격(중거리)<br>• 붙잡기(스택 최대 3칸): 조이스틱을 당기면 붙잡을 수 있는 대상에 노란 표식, 조준된 대상에 빨간 표식이 뜹니다. 빨간 표식일 때 놓으면 붙잡기(큰 보스는 내가 끌려감). 조준된 대상이 없으면 사슬 공격<br>• 붙잡은 뒤 3초 안에 아래로 드래그 = 내리꽂기(+위로 튕김), 다른 방향 = 던지기. 내리꽂은 직후 한 번 더 터치하면 1칸 더 써서 강타<br>• 돌진: 공중(점프 중)에서 공격 조이스틱을 드래그했다 놓으면 그 방향으로 날아가 적에게 부딪힙니다 (붙잡을 대상이 조준되지 않았거나 스택이 없을 때 발동)<br>• 벽 매달리기: 공중에서 벽쪽으로 이동 키, 매달린 채 점프 = 벽 점프<br>• 일시정지: 화면 우상단 ⚙ 버튼 또는 Esc</p><div class="row"><button id="tutorialPlay" class="primary">연습 시작</button><button id="tutorialBack">돌아가기</button></div></div></div>
-<div id="pauseBtn">⚙</div>
+<div id="onRes" class="hidden" style="position:absolute;left:0;right:0;top:36%;text-align:center;font:bold 28px Galmuri11,monospace;text-shadow:3px 3px #000;z-index:35;pointer-events:none"></div><div id="pauseBtn">⚙</div>
 <div id="pauseOv" class="ov hidden" style="z-index:40"><div class="menuPanel"><h2>⏸ 일시정지</h2><div class="mcol" style="align-items:center"><button class="big primary" id="pResume">▶ 이어하기</button><button class="big" id="pRestart">↻ 다시하기</button><button class="big" id="pHelp">? 조작법</button><button class="big" id="pExit">⎋ 메인으로 나가기</button></div><label class="setting">소리 크기 <input id="volSetting" type="range" min="0" max="100" value="70"><span id="volValue">70%</span></label><small>※ 현재 게임에는 소리가 없어, 음량 설정만 저장됩니다.</small></div></div>
 <div id="helpOv" class="ov hidden" style="z-index:41"><div class="menuPanel"><h2>조작법</h2><p id="helpTxt" style="margin:0;text-align:left;font-size:13px"></p><div class="row"><button id="helpClose" class="primary">닫기</button></div></div></div>
 <div id="intro" class="ov hidden"><div id="introTitle">READY</div><small id="introHint">꾹 눌러 건너뛰기</small><div style="width:220px;height:5px;background:#333"><div id="introBar" style="height:5px;width:0;background:#ffd54f"></div></div></div></div>
@@ -726,4 +726,56 @@ document.addEventListener('dblclick',e=>e.preventDefault());
 // PC: Ctrl+휠, Ctrl/Cmd + (+ - 0) 확대 차단
 addEventListener('wheel',e=>{if(e.ctrlKey)e.preventDefault()},{passive:false});
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['+','-','=','_','0'].includes(e.key))e.preventDefault()});
+</script><script>
+// ===== VOLTIS ONLINE (1:1 PVP) 애드온 — 기존 게임 코드는 수정하지 않고 래핑만 함 =====
+(()=>{
+const URL_='https://voltis-online.onrender.com';
+let sock=null,started=false,ended=false,peerS=null,seq=0;
+const $o=id=>document.getElementById(id),on=()=>!!(G&&G.online);
+const st=t=>{$o('onSt').textContent=t};
+const panels=()=>document.querySelectorAll('#menu .menuPanel');
+function loadIO(cb){if(window.io)return cb();const s=document.createElement('script');s.src='https://cdn.socket.io/4.8.1/socket.io.min.js';s.onload=cb;s.onerror=()=>st('socket.io 로드 실패 (인터넷 확인)');document.head.appendChild(s)}
+function connect(cb){loadIO(()=>{if(!sock){sock=io(URL_,{transports:['websocket','polling']});wire()}
+ if(sock.connected)return cb();st('서버 연결 중… (서버가 잠들어 있으면 최대 1분)');sock.once('connect',()=>{sock.emit('player:set-name',PNAME||'PLAYER');cb()})})}
+function wire(){
+ sock.on('room:ready',d=>{$o('onCode').textContent=d.code;if(d.players.length<2){st('상대 접속 대기 중… 코드: '+d.code);return}if(started)return;started=true;begin(d)});
+ sock.on('room:peer-left',()=>{if(started&&G&&G.online&&!ended)finish(true,'상대가 나갔습니다 · 승리!');else if(!started)st('상대가 나갔습니다')});
+ sock.on('game:peer-input',m=>onInput(m.input||{}));
+ sock.on('game:peer-state',s=>{peerS=s});
+ sock.on('disconnect',()=>{if(started&&on()&&!ended)finish(false,'연결이 끊어졌습니다');else st('연결 끊김')})}
+function leave(){if(sock){sock.emit('match:cancel');sock.emit('room:leave')}started=false;ended=false;peerS=null;$o('onCode').textContent='------'}
+function begin(d){const op=d.players.find(p=>p.id!==sock.id)||{},host=d.players[0].id===sock.id;ended=false;peerS=null;
+ panels().forEach(x=>x.classList.add('hidden'));chosenMode='pvp';$o('stageSelect').value='ruins';launchSelected(false);
+ const p=G.teams[0],g=mkTeam(1,[['accelerate','chain']]);g.kind='bot';g.chars[0].cn=(op.name||'상대');
+ p.x=host?500:1900;p.fd=host?1:-1;g.x=host?1900:500;g.y=GY-14;G.teams[1]=g;G.online=1}
+function finish(win,msg){if(ended)return;ended=true;if(G){G.over=2}const r=$o('onRes');r.textContent=msg||(win?'승리!':'패배…');r.style.color=win?'#ffd54f':'#ff5a5a';r.classList.remove('hidden')}
+const send=o=>{if(sock&&on())sock.emit('game:input',Object.assign({seq:++seq,frame:G.f},o))};
+// --- 래핑: 내 행동을 상대에게 전송 / 상대 캐릭터(G.teams[1])는 AI 대신 원격 제어 ---
+const _tu=tryUse;tryUse=function(t,s){const r=_tu(t,s);if(r&&on()&&t.id===0&&(s==='basic'||s==='whip'))send({attack:s,aimX:Math.cos(t.face),aimY:Math.sin(t.face)});return r};
+const _pa=parry;parry=function(){_pa();if(on()){const p=G.teams[0];if(p.parry&&p.parry.start===G.f)send({parry:true})}};
+const _da=dash;dash=function(){_da();if(on()&&G.teams[0].dcd===42)send({dash:true})};
+const _ai=ai;ai=function(t,en){return on()&&t.id===1?[0,0]:_ai(t,en)};
+const _ko=ko;ko=function(t){if(on()&&t.id===1){const c=cur(t);c.hp=Math.max(1,c.hp);return}_ko(t)};
+function onInput(i){if(!on()||G.over||G.paused||G.cine)return;const g=G.teams[1];if(g.dead)return;
+ if(i.attack){g.face=Math.atan2(i.aimY||0,i.aimX||0);_tu(g,i.attack)}
+ if(i.parry&&!g.act)g.parry={manual:1,start:G.f,until:G.f+20};
+ if(i.dash){g.inv=Math.max(g.inv,8);g.dtr=12}}
+const _st=step;step=function(){_st();if(!on()||G.over)return;const g=G.teams[1],s=peerS;if(!s)return;const c=cur(g);
+ if(Math.hypot(s.x-g.x,s.y-g.y)>200){g.x=s.x;g.y=s.y}else{g.x+=(s.x-g.x)*.5;g.y+=(s.y-g.y)*.5}
+ c.max=s.max;c.hp=s.hp;g.gr=!!s.g;if(!g.act)g.face=s.f;if(s.d)finish(true,'승리!')};
+// 내 상태 20Hz 전송. 내가 쓰러지면 패배 처리 (피격 판정은 피해자 클라이언트 기준)
+setInterval(()=>{if(!on()||!sock)return;const p=G.teams[0],c=cur(p);
+ sock.emit('game:state',{x:p.x,y:p.y,hp:c.hp,max:c.max,f:p.face,g:p.gr?1:0,d:p.dead?1:0});
+ if(p.dead&&!ended)finish(false,'패배…')},50);
+// 메인으로 나가면 방 정리
+setInterval(()=>{if(!G){$o('onRes').classList.add('hidden');if(started)leave()}},500);
+// --- UI ---
+$o('onlineBtn').onclick=()=>{if(PROG<1){alert('프롤로그를 클리어하면 온라인 모드가 열립니다.');return}panels().forEach(x=>x.classList.add('hidden'));$o('onlinePanel').classList.remove('hidden');st('대기 중')};
+$o('onBack').onclick=()=>{leave();$o('onlinePanel').classList.add('hidden');showPanel('mainPanel')};
+$o('onRand').onclick=()=>connect(()=>sock.emit('match:join',{mode:'pvp'},a=>st(a.ok?'상대를 찾는 중…':a.error)));
+$o('onCancel').onclick=()=>{if(sock)sock.emit('match:cancel',()=>st('매칭 취소됨'))};
+$o('onMake').onclick=()=>connect(()=>sock.emit('room:create',{mode:'pvp'},a=>{if(!a.ok)return st(a.error);$o('onCode').textContent=a.code;st('친구에게 코드를 알려 주세요. 접속 대기 중…')}));
+$o('onJoin').onclick=()=>{const c=$o('onIn').value.trim();if(c.length<6)return st('6자리 코드를 입력하세요');connect(()=>sock.emit('room:join',{code:c},a=>st(a.ok?'입장 완료…':a.error)))};
+$o('onCopy').onclick=()=>{const c=$o('onCode').textContent;if(c==='------')return;try{navigator.clipboard.writeText(c);st('코드 복사됨: '+c)}catch(e){st('코드: '+c)}};
+})();
 </script></body></html>
