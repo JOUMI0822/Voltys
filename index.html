@@ -818,4 +818,32 @@ kb.onclick=()=>{document.querySelectorAll('#menu .menuPanel').forEach(x=>x.class
 $k('kBack').onclick=()=>{listen=null;P.classList.add('hidden');showPanel('settingsPanel')};
 $k('kReset').onclick=()=>{KB=Object.assign({},DFL);listen=null;save();draw()};
 })();
+</script><script>
+// ===== 클라우드 저장 (Supabase RPC) =====
+(()=>{
+const SB_URL='',SB_KEY='';   // ← Supabase 프로젝트 URL / anon public key 를 여기에 입력
+const KEYS=['pda_prog_v2','pda_prog','pda_name','pda_prefs','pda_keys','pda5','pda_vol'],$c=id=>document.getElementById(id);
+const ok=()=>!!(SB_URL&&SB_KEY);
+const rpc=(fn,body)=>fetch(SB_URL+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>{if(!r.ok)throw new Error(r.status);return r.text()}).then(t=>t?JSON.parse(t):null);
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const snap=()=>{const o={};for(const k of KEYS){const v=lsGet(k);if(v!==null)o[k]=v}return o};
+let code=lsGet('pda_code'),last='';
+if(!code){const a=new Uint8Array(20);crypto.getRandomValues(a);code=Array.from(a,b=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[b%32]).join('');try{localStorage.setItem('pda_code',code)}catch(e){}}
+const prog=o=>Number(o&&(o.pda_prog_v2||o.pda_prog))||0;
+const S=t=>{const e=$c('cSt');if(e)e.textContent=t};
+async function up(force){if(!ok())return;const s=snap(),j=JSON.stringify(s);if(!force&&j===last)return;try{await rpc('put_save',{p_code:code,p_data:s});last=j;S('저장됨 · '+new Date().toLocaleTimeString())}catch(e){S('저장 실패: '+e.message)}}
+function apply(d){for(const k of KEYS)if(d[k]!==undefined)try{localStorage.setItem(k,d[k])}catch(e){}location.reload()}
+async function pull(c,manual){try{const d=await rpc('get_save',{p_code:c});if(!d){if(manual)S('해당 코드의 저장 데이터가 없습니다');return false}
+ if(manual||prog(d)>prog(snap())){if(manual){code=c;try{localStorage.setItem('pda_code',c)}catch(e){}}apply(d);return true}}catch(e){if(manual)S('불러오기 실패: '+e.message)}return false}
+if(ok()){pull(code,false);setInterval(()=>up(false),15000);addEventListener('pagehide',()=>up(false))}
+const P=document.createElement('div');P.className='menuPanel hidden';P.id='cloudPanel';
+P.innerHTML='<h2>☁ 클라우드 저장</h2><small id="cInfo"></small><div class="row">내 저장 코드: <b id="cCode"></b><button id="cCopy">복사</button></div><div class="row"><button class="primary" id="cNow">지금 저장</button></div><div class="row"><input type="text" id="cIn" maxlength="20" placeholder="다른 기기의 저장 코드"><button id="cLoad">불러오기</button></div><small id="cSt"></small><div class="row"><button id="cBack">돌아가기</button></div><small>※ 저장 코드를 아는 사람은 누구나 이 진행도를 덮어쓸 수 있으니 공개하지 마세요. 진행도·이름·설정·키/버튼 배치가 저장됩니다.</small>';
+$c('menu').appendChild(P);
+const b=document.createElement('button');b.textContent='☁ 클라우드 저장';const sb=$c('settingsBack');sb.parentNode.insertBefore(b,sb);
+b.onclick=()=>{document.querySelectorAll('#menu .menuPanel').forEach(x=>x.classList.add('hidden'));P.classList.remove('hidden');$c('cCode').textContent=code;$c('cInfo').textContent=ok()?'진행도가 15초마다 자동 저장됩니다.':'Supabase 설정이 필요합니다 (index.html 상단 SB_URL / SB_KEY 입력). 지금은 이 기기(브라우저)에만 저장됩니다.';S('')};
+$c('cBack').onclick=()=>{P.classList.add('hidden');showPanel('settingsPanel')};
+$c('cNow').onclick=()=>ok()?up(true):S('Supabase 설정이 필요합니다');
+$c('cLoad').onclick=()=>{const c=$c('cIn').value.trim().toUpperCase();if(!ok())return S('Supabase 설정이 필요합니다');if(c.length<16)return S('저장 코드를 확인하세요');pull(c,true)};
+$c('cCopy').onclick=()=>{try{navigator.clipboard.writeText(code);S('코드 복사됨')}catch(e){}};
+})();
 </script></body></html>
