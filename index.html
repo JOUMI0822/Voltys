@@ -557,13 +557,38 @@ document.getElementById('settingsBtn').onclick=()=>showPanel('settingsPanel');do
 function applyButtonSettings(){document.querySelectorAll('.b,#azone').forEach(b=>{b.style.transform='scale('+(settings.buttonSize/100*(b.dataset.sc||100)/100)+')';b.style.opacity=String(settings.buttonAlpha/100)})}
 try{const savedPrefs=JSON.parse(localStorage.getItem('pda_prefs')||'{}');if(Number.isFinite(savedPrefs.shake))document.getElementById('shakeSetting').value=savedPrefs.shake;if(Number.isFinite(savedPrefs.buttonSize))settings.buttonSize=savedPrefs.buttonSize;if(Number.isFinite(savedPrefs.buttonAlpha))settings.buttonAlpha=savedPrefs.buttonAlpha;SHAKE_MULT=Number(document.getElementById('shakeSetting').value)/100;document.getElementById('buttonSize').value=settings.buttonSize;document.getElementById('buttonAlpha').value=settings.buttonAlpha;document.getElementById('shakeValue').textContent=document.getElementById('shakeSetting').value+'%';document.getElementById('buttonValue').textContent=settings.buttonSize+'%';document.getElementById('alphaValue').textContent=settings.buttonAlpha+'%'}catch(e){}function savePrefs(){try{localStorage.setItem('pda_prefs',JSON.stringify({shake:document.getElementById('shakeSetting').value,buttonSize:settings.buttonSize,buttonAlpha:settings.buttonAlpha}))}catch(e){}}[['shakeSetting','shakeValue',v=>{SHAKE_MULT=Number(v)/100}],['buttonSize','buttonValue',v=>{settings.buttonSize=Number(v);applyButtonSettings()}],['buttonAlpha','alphaValue',v=>{settings.buttonAlpha=Number(v);applyButtonSettings()}]].forEach(([id,out,fn])=>{const el=document.getElementById(id);el.oninput=()=>{document.getElementById(out).textContent=el.value+'%';fn(el.value);savePrefs()}});applyButtonSettings();
 document.getElementById('resetButtons').onclick=()=>{settings.buttonSize=100;settings.buttonAlpha=75;document.getElementById('buttonSize').value=100;document.getElementById('buttonAlpha').value=75;document.getElementById('buttonValue').textContent='100%';document.getElementById('alphaValue').textContent='75%';document.querySelectorAll('.b,#azone').forEach(b=>{b.style.right='';b.style.bottom='';b.style.left='';b.style.top='';delete b.dataset.sc});try{localStorage.removeItem('pda5')}catch(e){}applyButtonSettings();if(typeof savePrefs==='function')savePrefs()};
-function launchSelected(tutorial=false){GAME_MODE=tutorial?'tutorial':chosenMode;PLAYER_COUNT=1;STAGE=configureStage(document.getElementById('stageSelect').value);const defs=[['accelerate','chain']];start(defs);const[p,e]=G.teams;p.gs=3;p.fd=1;p.x=500;p.y=GY-14;e.x=1900;e.y=GY-14;ring(e.x,e.y,60,'#ff5a5a');G.paused=1;beginIntro(tutorial?'튜토리얼 시작':GAME_MODE==='pvp'?'PVP 대전':GAME_MODE==='story'?'CHAPTER '+CH.id+' · '+CH.t:'웨이브 시작',()=>{if(!G)return;const pro=GAME_MODE==='story'&&CH&&CH.id==='0';const go=()=>{G.blind=0;G.paused=0;p.y=GY-14-480;if(GAME_MODE==='story'){G.eye={s:TT,type:pro?'eye':'fade'};G.cine={type:'player',t:pro?-18:-10}}else G.cine={type:'player',t:0}};if(GAME_MODE==='story'&&CH){G.blind=1;startScene(CH.intro,go)}else go()});}
+function launchSelected(tutorial=false){GAME_MODE=tutorial?'tutorial':chosenMode;PLAYER_COUNT=1;STAGE=configureStage(document.getElementById('stageSelect').value);const defs=[['accelerate','chain']];start(defs);const[p,e]=G.teams;p.gs=3;p.fd=1;p.x=500;p.y=GY-14;e.x=1900;e.y=GY-14;ring(e.x,e.y,60,'#ff5a5a');G.paused=1;beginIntro(tutorial?'튜토리얼 시작':GAME_MODE==='pvp'?'PVP 대전':GAME_MODE==='story'?'CHAPTER '+CH.id+' · '+CH.t:'웨이브 시작',()=>{if(!G)return;const pro=GAME_MODE==='story'&&CH&&CH.id==='0';const go=()=>{G.blind=0;G.paused=0;p.y=GY-14-480;if(GAME_MODE==='story'){G.eye={s:TT,type:pro?'eye':'fade'};G.cine={type:'player',t:pro?-80:-10}}else G.cine={type:'player',t:0}};if(GAME_MODE==='story'&&CH){G.blind=1;startScene(CH.intro,go)}else go()});}
 document.getElementById('go').onclick=()=>launchSelected(false);document.getElementById('tutorialPlay').onclick=()=>launchSelected(true);
-try{localStorage.removeItem('pda5')}catch(e){}
 {const IC=d=>'<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';
  const ic={bJ:'<path d="M12 19V5M5 11l7-7 7 7"/>',bD:'<path d="M3 7h7M1 12h9M3 17h7M13 6l6 6-6 6"/>',bP:'<path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/>',b1:'<rect x="2" y="9" width="11" height="6" rx="3"/><rect x="11" y="9" width="11" height="6" rx="3"/>'};
  for(const k in ic)document.getElementById(k).innerHTML=IC(ic[k]);document.getElementById('aknob').innerHTML=IC('<path d="M5 19L17 7M14 4h6v6M7 14l3 3M4 20l3-3"/>')}
 applyButtonSettings();
+// ===== 모바일 버튼 위치 편집 =====
+(()=>{
+ const wrap=document.getElementById('wrap');
+ const controls=[...document.querySelectorAll('.b,#azone')];
+ const editBtn=document.createElement('button');editBtn.id='bLock';editBtn.type='button';editBtn.textContent='⚙';editBtn.title='버튼 위치 편집';
+ editBtn.style.cssText='position:absolute;right:8px;top:26px;width:34px;height:34px;z-index:25;border-radius:8px;background:#101522ee;border:2px solid #ffd54f;color:#ffd54f;font-size:18px;display:none;align-items:center;justify-content:center;touch-action: manipulation;';
+ wrap.appendChild(editBtn);
+ const bar=document.createElement('div');bar.id='editBar';bar.innerHTML='<b>버튼 위치 편집</b><span>버튼을 끌어서 이동</span><button type="button" id="editDone">완료</button>';
+ wrap.appendChild(bar);
+ let editing=false,drag=null;
+ const read=()=>{try{return JSON.parse(localStorage.getItem('pda5')||'{}')}catch(e){return {}}};
+ const save=()=>{const out={};controls.forEach(el=>{if(el.dataset.posX!==undefined)out[el.id]={x:Number(el.dataset.posX),y:Number(el.dataset.posY)}});try{localStorage.setItem('pda5',JSON.stringify(out))}catch(e){}};
+ const restore=()=>{const data=read();controls.forEach(el=>{const q=data[el.id];if(!q||!Number.isFinite(q.x)||!Number.isFinite(q.y))return;el.style.left=(q.x*100)+'%';el.style.top=(q.y*100)+'%';el.style.right='auto';el.style.bottom='auto';el.style.translate='-50% -50%';el.dataset.posX=q.x;el.dataset.posY=q.y})};
+ const setEditing=v=>{editing=v;bar.classList.toggle('hidden',!v);editBtn.textContent=v?'✕':'⚙';editBtn.title=v?'편집 취소':'버튼 위치 편집';controls.forEach(el=>{el.style.outline=v?'2px dashed #ffd54f':'';el.style.touchAction=v?'none':''});};
+ editBtn.addEventListener('click',()=>setEditing(!editing));
+ bar.querySelector('#editDone').addEventListener('click',()=>{save();setEditing(false)});
+ controls.forEach(el=>{
+  el.addEventListener('pointerdown',e=>{if(!editing)return;e.preventDefault();e.stopImmediatePropagation();el.setPointerCapture(e.pointerId);const r=wrap.getBoundingClientRect();drag={el,id:e.pointerId,rect:r};},true);
+  el.addEventListener('pointermove',e=>{if(!editing||!drag||drag.el!==el||drag.id!==e.pointerId)return;e.preventDefault();const r=drag.rect;const x=Math.max(.025,Math.min(.975,(e.clientX-r.left)/r.width));const y=Math.max(.04,Math.min(.96,(e.clientY-r.top)/r.height));el.style.left=(x*100)+'%';el.style.top=(y*100)+'%';el.style.right='auto';el.style.bottom='auto';el.style.translate='-50% -50%';el.dataset.posX=x;el.dataset.posY=y;},true);
+  const end=e=>{if(drag&&drag.el===el&&drag.id===e.pointerId){drag=null;save()}};el.addEventListener('pointerup',end,true);el.addEventListener('pointercancel',end,true);
+ });
+ // Position editor is available only on touch devices; saved positions apply on every load.
+ const show=()=>{editBtn.style.display=document.body.classList.contains('touch')?'flex':'none'};
+ restore();show();addEventListener('touchstart',show,{once:true,passive:true});
+ const reset=document.getElementById('resetButtons');if(reset){const old=reset.onclick;reset.onclick=()=>{if(old)old();controls.forEach(el=>{el.style.translate='';delete el.dataset.posX;delete el.dataset.posY});try{localStorage.removeItem('pda5')}catch(e){}setEditing(false)}}
+})();
 // ===== 공격 조이스틱 / 사슬 =====
 const GRP={gun_auto:'rapid',blade_short:'rapid',gun_single:'single',spear:'single',blade_long:'single',chain:'chain'};
 const atk={on:0,id:null,sx:0,sy:0,dx:0,dy:0,drag:0,ang:0,pend:null,pt:0,mk:null};
@@ -689,11 +714,9 @@ function narr(k){if(!/^n[123]$/.test(k)){NL.k='';return}if(NL.k!==k){NL.k=k;NL.t
  const fi=Math.max(0,1-lt/30);if(fi>0){cx.globalAlpha=fi;cx.fillRect(0,0,VW,VH)}cx.restore()}
 function drawEye(){const E=G.eye;if(!E)return;const k=TT-E.s;
  if(E.type==='fade'){const a=1-k/36;if(a<=0){G.eye=null;return}cx.globalAlpha=a;cx.fillStyle='#000';cx.fillRect(0,0,VW,VH);cx.globalAlpha=1;return}
- // 프롤로그: 짧고 부드럽게 눈을 뜨고, 아주 약한 한 번의 깜빡임으로 마무리
- if(k>=52){G.eye=null;return}
- const t=Math.max(0,Math.min(1,k/34));let o=1-Math.pow(1-t,3);
- if(k>=36&&k<40)o*=1-.10*Math.sin((k-36)/4*Math.PI);
- const hh=o*VH*.62*(1+o);cx.globalAlpha=Math.max(0,.48*(1-o));cx.fillStyle='#000';cx.fillRect(0,0,VW,VH);cx.globalAlpha=1;
+ const kf=[[0,0],[14,.2],[34,.2],[46,0],[58,0],[84,.6],[96,.4],[106,.12],[116,.12],[150,1]];if(k>150){G.eye=null;return}
+ let o=0;for(let i=1;i<kf.length;i++)if(k<=kf[i][0]){const a=kf[i-1],b=kf[i];o=a[1]+(b[1]-a[1])*(k-a[0])/(b[0]-a[0]);break}
+ const hh=o*VH*.62*(1+o);cx.globalAlpha=Math.max(0,.55*(1-o));cx.fillStyle='#000';cx.fillRect(0,0,VW,VH);cx.globalAlpha=1;
  for(let x=0;x<VW;x+=2){const u=(x+1-VW/2)/(VW*.55),e=Math.sqrt(Math.max(0,1-u*u))*hh,y0=Math.round(VH/2-e),y1=Math.round(VH/2+e);if(y0>0)cx.fillRect(x,0,2,y0);if(y1<VH)cx.fillRect(x,y1,2,VH-y1)}}
 function drawScene(){const sc=G.scene,L=sc.l[sc.i],p=G.teams[0],e=G.teams[1];if(G.blind){cx.fillStyle='#000';cx.fillRect(0,0,VW,VH)}cx.fillStyle='#0007';cx.fillRect(0,0,VW,VH);narr(L.s);cx.fillStyle='#000';cx.fillRect(0,0,VW,18);cx.fillRect(0,VH-18,VW,18);
  showBubble(L,sc.c,/^n/.test(L.s)?{x:VW/2,y:VH*.88}:L.s==='h'?{x:S(p.x),y:T(p.y)-26}:L.s==='b'&&!e.dead?{x:S(e.x),y:T(e.y)-30}:null)}
